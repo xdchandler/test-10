@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arcade Hub</title>
+<style>
+  body { font-family: Arial; margin:0; background:#1e3c72; color:white; }
+  header { text-align:center; padding:30px; background:rgba(0,0,0,0.5); }
+  header h1 { color:#ffdd59; }
+  #searchBar { width:90%; max-width:500px; padding:10px; margin:15px auto; display:block; border-radius:8px; border:none; font-size:16px; }
+  .games-container { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:15px; padding:15px; }
+  .game-card { background:rgba(255,255,255,0.1); border-radius:12px; text-align:center; cursor:pointer; transition:0.2s; }
+  .game-card:hover { transform:scale(1.05); box-shadow:0 0 10px #ffdd59; }
+  .game-card img { width:100%; height:100px; object-fit:cover; border-top-left-radius:12px; border-top-right-radius:12px; }
+  .game-card h3 { margin:8px; font-size:14px; }
+  #gameModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); justify-content:center; align-items:center; flex-direction:column; z-index:1000; }
+  #gameModal iframe { width:90%; height:70%; border:none; border-radius:8px; }
+  button { padding:10px 20px; margin:8px; background:#ffdd59; border:none; border-radius:8px; color:#000; font-size:15px; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Arcade Hub</h1>
+  <input type="text" id="searchBar" placeholder="Search for a game...">
+</header>
+
+<div class="games-container" id="gamesContainer"></div>
+
+<div id="gameModal">
+  <iframe id="gameFrame" src=""></iframe>
+  <div>
+    <button onclick="toggleFullscreen()">Toggle Fullscreen</button>
+    <button onclick="closeGame()">Exit Game</button>
+  </div>
+</div>
+
+<script>
+// ✅ Your games array goes here
+const games = [
+  { title:'Veck.io', url:'https://veck.io/', img:'https://picsum.photos/200/150?random=12' },
+  { title:'Rocket Goal', url:'https://rocketgoal.io/', img:'https://picsum.photos/200/150?random=8' },
+  { title:'Slither.io', url:'https://slither.io/', img:'https://picsum.photos/200/150?random=1' },
+  { title:'Agar.io', url:'https://agar.io/', img:'https://picsum.photos/200/150?random=5' },
+  { title:'Krunker.io', url:'https://krunker.io/', img:'https://picsum.photos/200/150?random=4' },
+  { title:'Paper.io 2', url:'https://paper-io.com/', img:'https://picsum.photos/200/150?random=3' },
+  { title:'Run 3', url:'https://www.crazygames.com/game/run-3', img:'https://picsum.photos/200/150?random=13' },
+  { title:'Fireboy and Watergirl', url:'https://www.crazygames.com/game/fireboy-and-watergirl', img:'https://picsum.photos/200/150?random=14' },
+  { title:'Zombs Royale', url:'https://www.crazygames.com/game/zombs-royale-io', img:'https://picsum.photos/200/150?random=15' },
+  { title:'Venge.io', url:'https://www.crazygames.com/game/venge-io', img:'https://picsum.photos/200/150?random=16' },
+  { title:'Subway Surfers', url:'https://www.crazygames.com/game/subway-surfers', img:'https://picsum.photos/200/150?random=17' },
+  { title:'Drift Boss', url:'https://www.crazygames.com/game/drift-boss', img:'https://picsum.photos/200/150?random=18' },
+  // Add more games here
+];
+
+// Function to render games
+const container = document.getElementById('gamesContainer');
+const searchBar = document.getElementById('searchBar');
+
+function displayGames(list) {
+  container.innerHTML = '';
+  list.forEach(game => {
+    const card = document.createElement('div');
+    card.className = 'game-card';
+    card.innerHTML = `
+      <img src="${game.img}" alt="${game.title}">
+      <h3>${game.title}</h3>
+    `;
+    card.onclick = () => openGame(game.url);
+    container.appendChild(card);
+  });
+}
+
+// Display all games initially
+displayGames(games);
+
+// Search functionality
+searchBar.addEventListener('input', () => {
+  const value = searchBar.value.toLowerCase();
+  const filtered = games.filter(g => g.title.toLowerCase().includes(value));
+  displayGames(filtered);
+});
+
+// Game modal logic
+const modal = document.getElementById('gameModal');
+const frame = document.getElementById('gameFrame');
+
+function openGame(url) {
+  frame.src = url;
+  modal.style.display = 'flex';
+}
+
+function closeGame() {
+  frame.src = '';
+  modal.style.display = 'none';
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    frame.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+}
+</script>
+
+</body>
+</html>
